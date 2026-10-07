@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="uz" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informatika va IT - 20 Talik Interaktiv Test Platformasi</title>
+    <meta name="description" content="Informatika va Axborot Texnologiyalari (IT) bo'yicha 20 talik professional test platformasi. Kompyuter savodxonligi, Web dasturlash, Python, Kiberxavfsizlik va SQL bo'yicha testlar.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Ambient glowing backgrounds -->
+    <div class="bg-ambient">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <!-- Fireworks & celebration canvas -->
+    <canvas id="confettiCanvas"></canvas>
+
+    <div class="app-container">
+        <!-- Top Navigation -->
+        <header class="navbar">
+            <div class="brand" onclick="goHome()">
+                <div class="brand-icon">💻</div>
+                <div>
+                    <div class="brand-title">
+                        IT <span style="color: var(--accent);">TEST</span> <span style="color: var(--primary);">PRO</span>
+                        <span class="badge-20">20 TALIK</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="nav-actions">
+                <button class="btn-icon" id="themeToggleBtn" onclick="toggleTheme()" title="Mavzuni almashtirish (Tun/Kun)">
+                    🌙
+                </button>
+                <button class="btn-icon" id="soundToggleBtn" onclick="toggleSound()" title="Ovozni yoqish/o'chirish">
+                    🔊
+                </button>
+            </div>
+        </header>
+
+        <!-- VIEW 1: HOME & CATEGORY SELECTION -->
+        <main id="homeView" class="view active">
+            <section class="hero-banner">
+                <div class="hero-pill">
+                    <span class="dot"></span>
+                    <span>Informatika & Axborot Texnologiyalari (IT)</span>
+                </div>
+                <h1 class="hero-title">
+                    IT Bilimingizni <span class="text-gradient">Sinovdan O'tkazing</span>
+                </h1>
+                <p class="hero-desc">
+                    Kompyuter savodxonligi, Web dasturlash (HTML/CSS/JS), Python, Kiberxavfsizlik va Ma'lumotlar bazasi bo'yicha har bir yo'nalishda aniq 20 tadan maxsus saralangan test savollari!
+                </p>
+            </section>
+
+            <!-- Test Configuration Bar -->
+            <div class="test-options-bar">
+                <div class="options-group">
+                    <span class="options-label">⏱️ Taymer:</span>
+                    <select id="timerSelect" class="select-pill">
+                        <option value="1200" selected>20 Daqiqa (Standart)</option>
+                        <option value="900">15 Daqiqa (Tezkor)</option>
+                        <option value="1500">25 Daqiqa</option>
+                        <option value="1800">30 Daqiqa</option>
+                        <option value="0">Vaqtsiz (Cheksiz)</option>
+                    </select>
+                </div>
+
+                <div class="options-group">
+                    <label class="toggle-switch-wrapper" title="Mashq rejimida har bir javob belgilanganda darhol to'g'ri/xatoligi va izohi ko'rsatiladi">
+                        <input type="checkbox" id="instantModeToggle" class="toggle-input">
+                        <div class="toggle-switch"></div>
+                        <span class="options-label" style="text-transform: none; font-size: 13.5px;">💡 Mashq rejimi (Darhol izoh)</span>
+                    </label>
+                </div>
+
+                <div class="options-group">
+                    <label class="toggle-switch-wrapper" title="Savollar va variantlar tartibi har safar tasodifiy aralashtiriladi">
+                        <input type="checkbox" id="shuffleToggle" class="toggle-input" checked>
+                        <div class="toggle-switch"></div>
+                        <span class="options-label" style="text-transform: none; font-size: 13.5px;">🔀 Savollarni aralashtirish</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Categories Grid -->
+            <div class="section-head">
+                <h2 class="section-title">
+                    <span>⚡ IT Modulini Tanlang</span>
+                </h2>
+                <span style="font-size: 13px; color: var(--text-secondary);">Har bir modulda aniq 20 ta test</span>
+            </div>
+
+            <div class="category-grid" id="categoryGrid">
+                <!-- Dynamically populated from questions.js -->
+            </div>
+
+            <!-- Recent History Section -->
+            <section class="history-section">
+                <div class="history-header">
+                    <h3 style="font-size: 16px; font-weight: 700; display: flex; align-items: center; gap: 8px;">
+                        <span>📊 Oxirgi Natijalar Tarixi</span>
+                    </h3>
+                    <button class="btn-ctrl" onclick="clearHistory()" style="padding: 4px 10px; font-size: 12px;">
+                        Tarixni tozalash
+                    </button>
+                </div>
+                <div class="history-list" id="historyList">
+                    <div class="history-empty">Hali test topshirilmadi. Birorta IT modulini tanlab testni boshlang!</div>
+                </div>
+            </section>
+        </main>
+
+        <!-- VIEW 2: ACTIVE TEST TAKING VIEW -->
+        <main id="testView" class="view">
+            <!-- Test Top Header Bar -->
+            <div class="test-topbar">
+                <div class="test-info-group">
+                    <span id="activeSubjectIcon" style="font-size: 26px;">💻</span>
+                    <div>
+                        <div class="test-active-title" id="activeSubjectTitle">Web Dasturlash</div>
+                        <div style="font-size: 12px; color: var(--text-muted);" id="activeModeSubtitle">20 Talik IT Blok Test</div>
+                    </div>
+                </div>
+
+                <div class="test-info-group">
+                    <div class="timer-box" id="timerBox">
+                        <span>⏳</span>
+                        <span id="timerDisplay">20:00</span>
+                    </div>
+                    <button class="btn-quit" onclick="confirmQuitTest()">
+                        Chiqish
+                    </button>
+                </div>
+            </div>
+
+            <!-- Overall Progress -->
+            <div class="progress-container">
+                <div class="progress-info">
+                    <span id="progressText">Savol: 1 / 20</span>
+                    <span id="answeredStatsText">0 ta belgilandi</span>
+                </div>
+                <div class="progress-bar-bg">
+                    <div class="progress-bar-fill" id="progressBarFill"></div>
+                </div>
+            </div>
+
+            <!-- Main Test Split Layout -->
+            <div class="test-layout">
+                <!-- Left: Question Card -->
+                <div class="question-card">
+                    <div class="q-meta">
+                        <span class="q-badge" id="qBadgeNum">Savol 1 / 20</span>
+                        <button class="btn-flag" id="btnFlagQuestion" onclick="toggleFlagCurrentQuestion()">
+                            <span>🚩</span>
+                            <span id="flagBtnText">Eslab qolish</span>
+                        </button>
+                    </div>
+
+                    <div class="q-text" id="questionText">
+                        Savol yuklanmoqda...
+                    </div>
+
+                    <!-- Options List -->
+                    <div class="options-list" id="optionsContainer">
+                        <!-- Options generated dynamically -->
+                    </div>
+
+                    <!-- Instant Explanation Box (when Instant Mode is ON) -->
+                    <div class="explanation-box" id="explanationBox">
+                        <div class="exp-title">
+                            <span>💡 Tushuntirish:</span>
+                        </div>
+                        <div class="exp-content" id="explanationText">
+                            Bu yerda savol yuzasidan batafsil izoh chiqadi.
+                        </div>
+                    </div>
+
+                    <!-- Question Card Controls -->
+                    <div class="q-controls">
+                        <button class="btn-ctrl" id="btnPrevQ" onclick="prevQuestion()" disabled>
+                            ← Oldingi
+                        </button>
+
+                        <button class="btn-ctrl" onclick="clearCurrentAnswer()" style="color: var(--text-muted);">
+                            Tozalash
+                        </button>
+
+                        <button class="btn-ctrl btn-primary-ctrl" id="btnNextQ" onclick="nextQuestion()">
+                            Keyingi →
+                        </button>
+
+                        <button class="btn-ctrl btn-finish-test" id="btnFinishTest" onclick="promptFinishTest()">
+                            Yakunlash ✓
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Right: Question 1-20 Palette -->
+                <div class="palette-card">
+                    <div class="palette-title">
+                        <span>Savollar jadvali</span>
+                        <span style="font-size: 13px; color: var(--primary); font-weight: 800;">20 ta</span>
+                    </div>
+
+                    <div class="palette-grid" id="paletteGrid">
+                        <!-- 1 to 20 buttons generated dynamically -->
+                    </div>
+
+                    <div class="palette-legend">
+                        <div class="legend-item">
+                            <span class="legend-color legend-current"></span>
+                            <span>Hozirgi savol</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color legend-answered"></span>
+                            <span>Javob berilgan</span>
+                        </div>
+                        <div class="legend-item">
+                            <span class="legend-color legend-flagged"></span>
+                            <span>Belgilangan (Flag 🚩)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- VIEW 3: RESULTS & FULL REVIEW -->
+        <main id="resultView" class="view">
+            <div class="results-card">
+                <div class="result-badge" id="resultEmoji">🏆</div>
+                <h2 class="result-title" id="resultGradeTitle">A'lo Natija!</h2>
+                <p class="result-subtitle" id="resultSubtitle">Siz 20 talik IT test sinovini muvaffaqiyatli yakunladingiz.</p>
+
+                <!-- Big Score Highlight -->
+                <div class="score-hero-box">
+                    <div class="big-score" id="scoreCorrectNum">18</div>
+                    <div class="max-score">/ 20</div>
+                </div>
+
+                <!-- 4 Statistics Grid -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-num color-correct" id="statCorrect">18</div>
+                        <div class="stat-label">To'g'ri javoblar</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-num color-wrong" id="statWrong">2</div>
+                        <div class="stat-label">Noto'g'ri javoblar</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-num color-percent" id="statPercent">90%</div>
+                        <div class="stat-label">Aniqlik darajasi</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-num color-time" id="statTime">08:45</div>
+                        <div class="stat-label">Sarflangan vaqt</div>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="result-actions">
+                    <button class="btn-ctrl btn-primary-ctrl" onclick="restartCurrentTest()">
+                        🔄 Qayta topshirish
+                    </button>
+                    <button class="btn-ctrl" onclick="goHome()">
+                        🏠 Bosh sahifa
+                    </button>
+                    <button class="btn-ctrl" onclick="window.print()">
+                        🖨️ Natijani chop etish / PDF
+                    </button>
+                </div>
+
+                <!-- Detailed Answer Review Section -->
+                <div class="review-header">
+                    <div>
+                        <h3 style="font-size: 18px; font-weight: 800;">IT Savollari Tahlili va Izohlari</h3>
+                        <p style="font-size: 13px; color: var(--text-secondary);">Har bir savolning to'g'ri javobi va tushuntirishi bilan tanishing</p>
+                    </div>
+
+                    <div class="filter-tabs">
+                        <button class="tab-btn active" onclick="filterReview('all', this)">Barchasi (20)</button>
+                        <button class="tab-btn" onclick="filterReview('wrong', this)">Xatolar</button>
+                        <button class="tab-btn" onclick="filterReview('correct', this)">To'g'ri</button>
+                    </div>
+                </div>
+
+                <div class="review-list" id="reviewContainer">
+                    <!-- Review cards generated dynamically -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Confirmation Modal for Submitting Test -->
+    <div class="modal-overlay" id="finishModal">
+        <div class="modal-box">
+            <h3 class="modal-title">Testni yakunlaysizmi?</h3>
+            <p class="modal-desc" id="finishModalMsg">
+                Siz 20 ta savoldan 18 tasiga javob berdingiz. 2 ta savol belgilanmay qolgan.
+            </p>
+            <div class="modal-actions">
+                <button class="btn-ctrl" onclick="closeFinishModal()">Davom etish</button>
+                <button class="btn-ctrl btn-finish-test" onclick="executeFinishTest()">Ha, yakunlash</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast-msg" id="toastMsg">
+        <span id="toastIcon">ℹ️</span>
+        <span id="toastText">Xabar</span>
+    </div>
+
+    <!-- Scripts -->
+    <script src="questions.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
